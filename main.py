@@ -123,7 +123,9 @@ class Scene(scene.Scene):
         self.bg_y_anim.calc = lambda x: math.cos(x * 3) * 50 - 70
         self.bg_r_anim = gg.Animation(math.pi * 2, True, True)
         self.bg_r_anim.calc = lambda x: math.sin(x) * 3
-        self.text = tuple(x for x in os.listdir(self.a.cwd) if os.path.isfile(self.a.p(x, x + '.py')))
+        self.text = tuple(
+            x[:-3] for x in os.listdir(self.a.cwd) if x not in ('main.py', 'scene.py') and x.endswith('.py')
+        )
         self.textures = tuple(
             self.r.texture_from_surface(self.font.render_text(x, (255, 0, 0), blend=True)) for x in self.text
         )
@@ -174,7 +176,7 @@ class Scene(scene.Scene):
     def run_test(self) -> None:
         self.w.set_resizable(False)
         test_name = self.text[self.current]
-        self.r.load_scene(importlib.import_module(f'{test_name}.{test_name}').Scene)
+        self.r.load_scene(importlib.import_module(test_name).Scene)
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
         if event.pos[0] <= 200 and event.pos[1] <= 100:
