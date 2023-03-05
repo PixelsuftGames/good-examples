@@ -4,8 +4,10 @@ import scene
 import main
 try:
     import cymunk as cp
+    is_pymunk = False
 except ImportError:
     import pymunk as cp
+    is_pymunk = True
 
 
 class Circle:
@@ -30,7 +32,10 @@ class Scene(scene.Scene):
         self.r: main.Renderer = renderer
         self.fps_font: gg.TTF = data[0]
         self.size = self.r.get_output_size()
-        self.space = cp.Space(threaded=True)
+        if is_pymunk:
+            self.space = cp.Space(threaded=True)
+        else:
+            self.space = cp.Space()
         self.space.gravity = 0, 1000
         self.floor_rect = (20, self.size[1] - 30, self.size[0] - 40, 20)
         self.floor = cp.Segment(
