@@ -1,4 +1,5 @@
 import os
+import sys
 import math
 import random
 import importlib
@@ -49,7 +50,14 @@ class Window(gg.Window):
 
 class Renderer(gg.Renderer):
     def __init__(self, window: any) -> None:
-        super().__init__(window, vsync=True, backend=gg.BackendManager(window.app).get_best())
+        bm = gg.BackendManager(window.app)
+        if 'GG_BACKEND' in os.environ:
+            backend = bm.get_by_name(os.environ['GG_BACKEND'])
+        elif '--backend' in sys.argv:
+            backend = bm.get_by_name(sys.argv[sys.argv.index('--backend') + 1])
+        else:
+            backend = bm.get_best()
+        super().__init__(window, vsync=True, backend=backend)
         self.app: App = self.app
         self.window: Window = self.window
         self.window.set_title(f'Good Window [{self.backend.name}]')
