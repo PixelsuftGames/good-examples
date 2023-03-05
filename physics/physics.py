@@ -1,3 +1,4 @@
+import math
 import random
 import goodgame as gg
 import scene
@@ -10,10 +11,15 @@ except ImportError:
     is_pymunk = True
 
 
+sqrt_2 = math.sqrt(2)
+
+
 class Circle:
     def __init__(self, pos: any) -> None:
         self.color = (random.uniform(0, 255), random.uniform(0, 255), random.uniform(0, 255))
         self.radius = random.uniform(5, 75)
+        self.img_size = self.radius * sqrt_2
+        self.img_offset = self.img_size / 2
         self.mass = random.uniform(0.2, 1.5)
         self.moment = cp.moment_for_circle(self.mass, 0, self.radius)
         self.body = cp.Body(self.mass, self.moment)
@@ -31,6 +37,7 @@ class Scene(scene.Scene):
         self.w: main.Window = renderer.window
         self.r: main.Renderer = renderer
         self.fps_font: gg.TTF = data[0]
+        self.image = self.r.texture_from_surface(data[1])
         self.size = self.r.get_output_size()
         if is_pymunk:
             self.space = cp.Space(threaded=True)
@@ -45,7 +52,7 @@ class Scene(scene.Scene):
             self.floor_rect[3] / 2
         )
         self.floor.elasticity = 1
-        self.floor.friction = 1
+        self.floor.friction = 0.5
         self.space.add(self.floor)
         self.circles = []
 
@@ -57,6 +64,11 @@ class Scene(scene.Scene):
                 self.circles.remove(circle)
                 self.space.remove(circle.body, circle.shape)
             self.r.fill_circle(circle.color, circle.body.position, circle.radius)
+            self.r.blit_ex(self.image, dst_rect=(
+                circle.body.position[0] - circle.img_offset,
+                circle.body.position[1] - circle.img_offset,
+                circle.img_size, circle.img_size
+            ), angle=circle.body.angle * 180 / math.pi)
         self.r.fill_rect((0, 162, 232), self.floor_rect)
         self.r.blit(self.r.texture_from_surface(
             self.fps_font.render_text(f'FPS: {self.a.clock.get_fps()}', (0, 255, 255), blend=True)
@@ -76,6 +88,7 @@ class Scene(scene.Scene):
     def get_resources() -> tuple:
         return (
             ('font', 'segoeuib.ttf', 50),
+            ('image', 'pixelsuftgames.jpg'),
         )
 
     def destroy(self) -> bool:
