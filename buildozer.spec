@@ -13,7 +13,7 @@ package.domain = com.pixelsuft
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,txt,png,ttf,mp3,ogg
+source.include_exts = py,txt,png,jpg,ttf,mp3,ogg
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
