@@ -1,6 +1,7 @@
 import os
 import math
 import random
+import importlib
 import wintheme
 import goodgame as gg
 import scene
@@ -121,7 +122,7 @@ class Scene(scene.Scene):
         self.bg_y_anim.calc = lambda x: math.cos(x * 3) * 50 - 70
         self.bg_r_anim = gg.Animation(math.pi * 2, True, True)
         self.bg_r_anim.calc = lambda x: math.sin(x) * 3
-        self.text = ('Hello Test', 'World Test', 'Nice Test', 'Fucking Great', 'Pixelsuft was Here!!!', 'test', '1')
+        self.text = tuple(x for x in os.listdir(self.a.cwd) if os.path.isfile(self.a.p(x, x + '.py')))
         self.textures = tuple(
             self.r.texture_from_surface(self.font.render_text(x, (255, 0, 0), blend=True)) for x in self.text
         )
@@ -170,10 +171,12 @@ class Scene(scene.Scene):
         self.t_anim.run()
 
     def run_test(self) -> None:
-        self.r.load_scene(Scene)
+        self.w.set_resizable(False)
+        test_name = self.text[self.current]
+        self.r.load_scene(importlib.import_module(f'{test_name}.{test_name}').Scene)
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
-        if event.pos[0] <= 100 and event.pos[1] <= 50:
+        if event.pos[0] <= 200 and event.pos[1] <= 100:
             self.r.set_vsync(not self.r.vsync)
             return
         if event.pos[0] > self.size[0] / 2:
