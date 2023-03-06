@@ -80,7 +80,7 @@ class Scene(scene.Scene):
                 circle.body.position[1] - circle.img_offset,
                 circle.img_size, circle.img_size
             ), angle=circle.body.angle * 180 / math.pi)
-        self.r.fill_rect((0, 162, 232), self.floor_rect)
+        self.r.fill_rect((0, 0, 255) if self.draw_bg else (0, 162, 232), self.floor_rect)
         self.r.blit(self.r.texture_from_surface(
             self.fps_font.render_text(f'FPS: {self.a.clock.get_fps()}', (0, 255, 255), blend=True)
         ), dst_rect=(0, self.fps_font.descent))

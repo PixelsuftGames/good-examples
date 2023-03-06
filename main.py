@@ -235,7 +235,9 @@ class Scene(scene.Scene):
                 if is_filled:
                     self.r.fill_rect((0, 50, 0), (x * cube_size, y * cube_size, cube_size, cube_size), border)
                 is_filled = not is_filled
-        surf = self.font.render_text(f'Pixelsuft, {datetime.datetime.now().year}', (0, 255, 255), (255, 0, 255), True)
+        surf = self.font.render_text(
+            f'Pixelsuft, {datetime.datetime.now().year + 1}', (0, 255, 255), (255, 0, 255), True
+        )
         self.r.blit(
             self.r.texture_from_surface(surf),
             dst_rect=(w / 2 - surf.w / 2, h - 200)
