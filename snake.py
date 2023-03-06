@@ -14,9 +14,10 @@ class Scene(scene.Scene):
         self.r: main.Renderer = renderer
         self.w.set_resizable(True)
         self.size = self.r.get_output_size()
-        self.cell_size = 20
-        self.apple_rad = self.cell_size // 2
         self.scale = (self.size[0] / 640, self.size[1] / 480)
+        self.avg_scale = (self.scale[0] + self.scale[1]) / 2
+        self.cell_size = (20 * self.scale[0], 20 * self.scale[1])
+        self.apple_rad = 10 * self.avg_scale
         self.field_size = (32, 24)
         self.fps_font: gg.TTF = data[0]
         self.font: gg.TTF = data[1]
@@ -83,15 +84,13 @@ class Scene(scene.Scene):
                 self.snake.append(last_cache)
                 self.update_score()
         self.r.clear()
-        self.r.set_scale(self.scale)
-        self.r.fill_circle_tl((255, 0, 0), (self.apple_pos[0] * self.cell_size,
-                                            self.apple_pos[1] * self.cell_size), self.apple_rad)
+        self.r.fill_circle_tl((255, 0, 0), (self.apple_pos[0] * self.cell_size[0],
+                                            self.apple_pos[1] * self.cell_size[1]), self.apple_rad)
         for snake_part in self.snake[1:]:
-            self.r.fill_rect((0, 255, 0), (snake_part[0] * self.cell_size, snake_part[1] * self.cell_size,
-                                           self.cell_size, self.cell_size), 3)
-        self.r.fill_rect((255, 0, 0), (self.snake[0][0] * self.cell_size, self.snake[0][1] * self.cell_size,
-                                       self.cell_size, self.cell_size), 3)
-        self.r.set_scale()
+            self.r.fill_rect((0, 255, 0), (snake_part[0] * self.cell_size[0], snake_part[1] * self.cell_size[1],
+                                           self.cell_size[0], self.cell_size[1]), 3)
+        self.r.fill_rect((255, 0, 0), (self.snake[0][0] * self.cell_size[0], self.snake[0][1] * self.cell_size[1],
+                                       self.cell_size[0], self.cell_size[1]), 5 * self.avg_scale)
         self.r.blit(self.r.texture_from_surface(
             self.fps_font.render_text(f'FPS: {self.a.clock.get_fps()}', (0, 255, 255), blend=True)
         ), dst_rect=(0, self.fps_font.descent))
@@ -130,6 +129,10 @@ class Scene(scene.Scene):
     def on_resize(self, event: gg.WindowEvent) -> None:
         self.size = self.r.get_output_size()
         self.scale = (self.size[0] / 640, self.size[1] / 480)
+        self.avg_scale = (self.scale[0] + self.scale[1]) / 2
+        self.cell_size = (20 * self.scale[0], 20 * self.scale[1])
+        self.apple_rad = 10 * self.avg_scale
+        self.score_pos = (self.size[0] - self.score_tex.get_w() - 5, -12)
 
     @staticmethod
     def get_resources() -> tuple:
