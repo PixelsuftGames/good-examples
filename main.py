@@ -41,6 +41,7 @@ class Window(gg.Window):
         super().__init__(app, size=size)
         self.app: App = self.app
         self.emulate_mouse_with_touch = True
+        self.set_min_size((320, 200))
         wintheme.set_window_theme(self.get_hwnd(), wintheme.THEME_DARK)
         self.renderer = Renderer(self)
 
