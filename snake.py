@@ -17,7 +17,7 @@ class Scene(scene.Scene):
         self.scale = (self.size[0] / 640, self.size[1] / 480)
         self.avg_scale = (self.scale[0] + self.scale[1]) / 2
         self.cell_size = (20 * self.scale[0], 20 * self.scale[1])
-        self.apple_rad = 10 * self.avg_scale
+        self.apple_rad = (self.cell_size[0] / 2, self.cell_size[1] / 2)
         self.field_size = (32, 24)
         self.fps_font: gg.TTF = data[0]
         self.font: gg.TTF = data[1]
@@ -76,7 +76,7 @@ class Scene(scene.Scene):
                 self.snake[0] = (self.snake[0][0] - 1, self.snake[0][1])
             elif self.dir == 3:
                 self.snake[0] = (self.snake[0][0], self.snake[0][1] - 1)
-            if self.snake[0] in self.snake[1:] or self.snake[0][0] < 0 or self.snake[0][1] < 0 or\
+            if self.snake[0] in self.snake[1:] or self.snake[0][0] < 0 or self.snake[0][1] < 0 or \
                     self.snake[0][0] >= self.field_size[0] or self.snake[0][1] >= self.field_size[1]:
                 self.game_over()
                 return
@@ -84,8 +84,9 @@ class Scene(scene.Scene):
                 self.snake.append(last_cache)
                 self.update_score()
         self.r.clear()
-        self.r.fill_circle_tl((255, 0, 0), (self.apple_pos[0] * self.cell_size[0],
-                                            self.apple_pos[1] * self.cell_size[1]), self.apple_rad)
+        self.r.fill_ellipse_tl((255, 0, 0), (self.apple_pos[0] * self.cell_size[0],
+                                             self.apple_pos[1] * self.cell_size[1]), self.apple_rad[0],
+                               self.apple_rad[1])
         for snake_part in self.snake[1:]:
             self.r.fill_rect((0, 255, 0), (snake_part[0] * self.cell_size[0], snake_part[1] * self.cell_size[1],
                                            self.cell_size[0], self.cell_size[1]), 3)
@@ -131,7 +132,7 @@ class Scene(scene.Scene):
         self.scale = (self.size[0] / 640, self.size[1] / 480)
         self.avg_scale = (self.scale[0] + self.scale[1]) / 2
         self.cell_size = (20 * self.scale[0], 20 * self.scale[1])
-        self.apple_rad = 10 * self.avg_scale
+        self.apple_rad = (self.cell_size[0] / 2, self.cell_size[1] / 2)
         self.score_pos = (self.size[0] - self.score_tex.get_w() - 5, -12)
 
     @staticmethod
