@@ -229,10 +229,11 @@ class Scene(scene.Scene):
 
     def create_bg_texture(self) -> gg.Texture:
         w, h = self.size[0] + 140, self.size[1] + 140
-        tex = self.r.create_texture((w, h), self.r.pixel_format_from_str('rgba8888'))
+        tex = self.r.create_texture((w, h), self.r.pixel_format_from_str('rgb888'))
         self.r.set_target(tex)
         cube_size = 40
         border = random.uniform(0, 10)
+        self.r.clear()
         for y in range(h // cube_size + 1):
             is_filled = not y % 2
             for x in range(w // cube_size + 1):
