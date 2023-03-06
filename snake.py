@@ -98,6 +98,19 @@ class Scene(scene.Scene):
         self.r.blit(self.score_tex, dst_rect=self.score_pos)
         self.r.flip()
 
+    def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
+        if event.pos[0] > self.size[0] / 2:
+            if event.pos[1] > self.size[1] / 2:
+                if self.dir in (0, 2):
+                    self.new_dir = 1
+            elif self.dir in (0, 2):
+                self.new_dir = 3
+        elif event.pos[0] > self.size[0] / 4:
+            if self.dir in (1, 3):
+                self.new_dir = 0
+        elif self.dir in (1, 3):
+            self.new_dir = 2
+
     def on_key_down(self, event: gg.KeyboardEvent) -> None:
         if event.sym in ('AC Back', 'Escape'):
             self.r.load_scene(main.Scene)
