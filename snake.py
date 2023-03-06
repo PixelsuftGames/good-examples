@@ -24,7 +24,8 @@ class Scene(scene.Scene):
         self.music: gg.Music = data[2]
         self.eat_sound: gg.Chunk = data[3]
         self.die_sound: gg.Chunk = data[4]
-        self.timer = gg.Timer(0.5, enabled=True, smooth=True)
+        self.min_tick = 0.06 if self.a.platform == 'Android' else 0.04
+        self.timer = gg.Timer(0.75, enabled=True, smooth=True)
         self.die_timer = gg.Timer(2.5)
         self.snake = [(5, 1), (4, 1), (3, 1), (2, 1)]
         self.score = 0
@@ -44,8 +45,7 @@ class Scene(scene.Scene):
         self.score += 1
         while self.apple_pos == self.snake[0]:
             self.apple_pos = (random.randint(0, self.field_size[0] - 1), random.randint(0, self.field_size[1] - 1))
-        if self.timer.duration > 0.04:
-            self.timer.duration = max(self.timer.duration - 0.05, 0.04)
+        self.timer.duration = max(self.timer.duration - 0.01, self.min_tick)
         self.score_tex = self.r.texture_from_surface(self.font.render_text(
             f'Score: {self.score}', (0, 255, 255), blend=True
         ))
@@ -54,6 +54,7 @@ class Scene(scene.Scene):
 
     def game_over(self) -> None:
         self.die_timer.run()
+        self.music.stop()
         self.die_sound.play()
 
     def update(self, dt: float) -> None:
