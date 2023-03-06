@@ -2,6 +2,7 @@ import os
 import sys
 import math
 import random
+import datetime
 import importlib
 import wintheme
 import goodgame as gg
@@ -177,7 +178,7 @@ class Scene(scene.Scene):
 
     def update_textures(self) -> None:
         self.current_h1 = self.t_anim.value
-        self.current_h2 = self.size[1] / 2 - self.tex_h / 2 - self.tex_h * self.current
+        self.current_h2 = self.font.descent / 2 + self.size[1] / 2 - self.tex_h / 2 - self.tex_h * self.current
         self.update_rect()
         self.t_anim.reset()
         self.t_anim.run()
@@ -234,6 +235,11 @@ class Scene(scene.Scene):
                 if is_filled:
                     self.r.fill_rect((0, 50, 0), (x * cube_size, y * cube_size, cube_size, cube_size), border)
                 is_filled = not is_filled
+        surf = self.font.render_text(f'Pixelsuft, {datetime.datetime.now().year}', (0, 255, 255), (255, 0, 255), True)
+        self.r.blit(
+            self.r.texture_from_surface(surf),
+            dst_rect=(w / 2 - surf.w / 2, h - 200)
+        )
         self.r.set_target(None)
         return tex
 

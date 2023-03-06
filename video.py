@@ -66,6 +66,7 @@ class Scene(scene.Scene):
             return True
         self.cap.release()
         self.music.destroy()
+        self.fps_font.destroy()
         del self.r
         del self.w
         del self.a
