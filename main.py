@@ -41,7 +41,6 @@ class Window(gg.Window):
         super().__init__(app, size=size)
         self.app: App = self.app
         self.emulate_mouse_with_touch = True
-        self.set_icon(self.app.surface_from_file(self.app.p(self.app.assets_folder, 'pixelsuftgames.jpg')))
         wintheme.set_window_theme(self.get_hwnd(), wintheme.THEME_DARK)
         self.renderer = Renderer(self)
 
@@ -123,6 +122,7 @@ class Scene(scene.Scene):
         self.a: App = renderer.app
         self.w: Window = renderer.window
         self.r: Renderer = renderer
+        self.w.set_icon(data[2])
         self.w.set_resizable(True)
         self.size = self.r.get_output_size()
         self.font: gg.TTF = data[0]
@@ -222,7 +222,8 @@ class Scene(scene.Scene):
     def get_resources() -> tuple:
         return (
             ('font', 'segoeuib.ttf', 40),
-            ('font', 'segoeuib.ttf', 50)
+            ('font', 'segoeuib.ttf', 50),
+            ('image', 'pixelsuftgames.jpg')
         )
 
     def create_bg_texture(self) -> gg.Texture:

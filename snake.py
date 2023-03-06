@@ -64,9 +64,8 @@ class Scene(scene.Scene):
                 return self.r.load_scene(main.Scene)
         elif self.timer.triggered:
             self.timer.triggered -= 1
-            for i in range(self.snake_len):
-                self.snake[self.snake_len - i] = self.snake[self.snake_len - i - 1]
-            last_cache = self.snake[-1]
+            last_cache = self.snake.pop(-1)
+            self.snake.insert(1, self.snake[0])
             self.dir = self.new_dir
             if self.dir == 0:
                 self.snake[0] = (self.snake[0][0] + 1, self.snake[0][1])
@@ -89,7 +88,7 @@ class Scene(scene.Scene):
                                self.apple_rad[1])
         for snake_part in self.snake[1:]:
             self.r.fill_rect((0, 255, 0), (snake_part[0] * self.cell_size[0], snake_part[1] * self.cell_size[1],
-                                           self.cell_size[0], self.cell_size[1]), 3)
+                                           self.cell_size[0], self.cell_size[1]), 5 * self.avg_scale)
         self.r.fill_rect((255, 0, 0), (self.snake[0][0] * self.cell_size[0], self.snake[0][1] * self.cell_size[1],
                                        self.cell_size[0], self.cell_size[1]), 5 * self.avg_scale)
         self.r.blit(self.r.texture_from_surface(
