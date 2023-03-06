@@ -15,7 +15,8 @@ sqrt_2 = math.sqrt(2)
 
 
 class Circle:
-    def __init__(self, pos: any) -> None:
+    def __init__(self, pos: any, texture: gg.Texture) -> None:
+        self.texture = texture
         self.color = (random.uniform(0, 255), random.uniform(0, 255), random.uniform(0, 255))
         self.radius = random.uniform(5, 75)
         self.img_size = self.radius * sqrt_2
@@ -37,7 +38,7 @@ class Scene(scene.Scene):
         self.w: main.Window = renderer.window
         self.r: main.Renderer = renderer
         self.fps_font: gg.TTF = data[0]
-        self.image = self.r.texture_from_surface(data[1])
+        self.images = tuple(self.r.texture_from_surface(data[x + 1]) for x in range(5))
         self.size = self.r.get_output_size()
         if is_pymunk:
             self.space = cp.Space(threaded=True)
@@ -63,8 +64,11 @@ class Scene(scene.Scene):
             if circle.body.position[1] > self.size[1] + circle.radius:
                 self.circles.remove(circle)
                 self.space.remove(circle.body, circle.shape)
+            if circle.body.position[1] < -circle.radius or circle.body.position[0] < -circle.radius or\
+                    circle.body.position[1] + circle.radius > self.size[0]:
+                continue
             self.r.fill_circle(circle.color, circle.body.position, circle.radius)
-            self.r.blit_ex(self.image, dst_rect=(
+            self.r.blit_ex(circle.texture, dst_rect=(
                 circle.body.position[0] - circle.img_offset,
                 circle.body.position[1] - circle.img_offset,
                 circle.img_size, circle.img_size
@@ -76,7 +80,7 @@ class Scene(scene.Scene):
         self.r.flip()
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
-        circle = Circle(event.pos)
+        circle = Circle(event.pos, random.choice(self.images))
         self.circles.append(circle)
         self.space.add(circle.body, circle.shape)
 
@@ -89,6 +93,10 @@ class Scene(scene.Scene):
         return (
             ('font', 'segoeuib.ttf', 50),
             ('image', 'pixelsuftgames.jpg'),
+            ('image', 'boshy.jpg'),
+            ('image', 'face.png'),
+            ('image', 'rick.png'),
+            ('bmp', 'error.bmp')
         )
 
     def destroy(self) -> bool:

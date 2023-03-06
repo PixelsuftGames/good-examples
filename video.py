@@ -24,7 +24,9 @@ class Scene(scene.Scene):
         self.size = (960, 720)
         self.pitch = 3 * self.size[0]
         self.tex = self.r.create_texture(self.size, self.format)
+        self.update_frame()
         self.timer = gg.Timer(self.limit, enabled=True, smooth=True)
+        self.a.clock.reset()
         self.music.play()
 
     def update(self, dt: float) -> None:

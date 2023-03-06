@@ -90,6 +90,8 @@ class Renderer(gg.Renderer):
         fp = self.app.p(self.app.assets_folder, to_load[1])
         if to_load[0] == 'image':
             return self.app.surface_from_file(fp)
+        elif to_load[0] == 'bmp':
+            return self.app.surface_from_bmp(fp)
         elif to_load[0] == 'music':
             return gg.Music(self.mixer, fp)
         elif to_load[0] == 'sound':
@@ -131,9 +133,8 @@ class Scene(scene.Scene):
         self.bg_y_anim.calc = lambda x: math.cos(x * 3) * 50 - 70
         self.bg_r_anim = gg.Animation(math.pi * 2, True, True)
         self.bg_r_anim.calc = lambda x: math.sin(x) * 3
-        self.text = tuple(
-            x[:-3] for x in os.listdir(self.a.cwd) if x not in ('main.py', 'scene.py') and x.endswith('.py')
-        )
+        self.text = ['physics', 'video']
+        self.text.sort()
         self.textures = tuple(
             self.r.texture_from_surface(self.font.render_text(x, (255, 0, 0), blend=True)) for x in self.text
         )
