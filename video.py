@@ -30,12 +30,15 @@ class Scene(scene.Scene):
         self.destroyed = False
         self.a.clock.reset()
         self.music.play()
+        # TODO: progress bar
 
     def update(self, dt: float) -> None:
         self.timer.tick(dt)
         if self.timer.triggered:
             self.timer.triggered -= 1
             self.update_frame()
+        if self.destroyed:
+            return
         self.r.blit(self.tex)
         self.r.blit(self.r.texture_from_surface(
             self.fps_font.render_text(f'FPS: {self.a.clock.get_fps()}', (0, 255, 255), blend=True)
