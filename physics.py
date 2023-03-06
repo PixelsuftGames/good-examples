@@ -60,6 +60,8 @@ class Scene(scene.Scene):
         self.floor.friction = 0.5
         self.space.add(self.floor)
         self.circles = []
+        self.destroyed = False
+        self.a.clock.reset()
 
     def update(self, dt: float) -> None:
         self.space.step(dt)

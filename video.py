@@ -27,6 +27,7 @@ class Scene(scene.Scene):
         self.tex = self.r.create_texture(self.size, self.format)
         self.update_frame()
         self.timer = gg.Timer(self.limit, enabled=True, smooth=True)
+        self.destroyed = False
         self.a.clock.reset()
         self.music.play()
 
