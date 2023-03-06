@@ -122,8 +122,8 @@ class Scene(scene.Scene):
         self.a: App = renderer.app
         self.w: Window = renderer.window
         self.r: Renderer = renderer
-        self.size = self.r.get_output_size()
         self.w.set_resizable(True)
+        self.size = self.r.get_output_size()
         self.font: gg.TTF = data[0]
         self.fps_font: gg.TTF = data[1]
         self.bg = self.create_bg_texture()
@@ -183,7 +183,6 @@ class Scene(scene.Scene):
         self.t_anim.run()
 
     def run_test(self) -> None:
-        self.w.set_resizable(False)
         test_name = self.text[self.current]
         self.r.load_scene(importlib.import_module(test_name).Scene)
 

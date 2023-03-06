@@ -13,7 +13,8 @@ class Scene(scene.Scene):
         self.w: main.Window = renderer.window
         self.r: main.Renderer = renderer
         self.w.set_resizable(True)
-        self.music: gg.Music = data[0]
+        self.fps_font: gg.TTF = data[0]
+        self.music: gg.Music = data[1]
         self.circles = []
         # Not Recommended, but we don't need to check cv2
         self.cap = cv2.VideoCapture(self.a.p(self.a.assets_folder, 'video.mp4'))  # noqa
@@ -35,6 +36,9 @@ class Scene(scene.Scene):
             self.timer.triggered -= 1
             self.update_frame()
         self.r.blit(self.tex)
+        self.r.blit(self.r.texture_from_surface(
+            self.fps_font.render_text(f'FPS: {self.a.clock.get_fps()}', (0, 255, 255), blend=True)
+        ), dst_rect=(0, self.fps_font.descent))
         self.r.flip()
 
     def update_frame(self) -> None:
@@ -53,7 +57,8 @@ class Scene(scene.Scene):
     @staticmethod
     def get_resources() -> tuple:
         return (
-            ('music', 'video_music.mp3'),
+            ('font', 'segoeuib.ttf', 50),
+            ('music', 'video_music.mp3')
         )
 
     def destroy(self) -> bool:

@@ -37,8 +37,12 @@ class Scene(scene.Scene):
         self.a: main.App = renderer.app
         self.w: main.Window = renderer.window
         self.r: main.Renderer = renderer
+        self.w.set_resizable(True)
         self.fps_font: gg.TTF = data[0]
-        self.images = tuple(self.r.texture_from_surface(data[x + 1]) for x in range(5))
+        self.sound: gg.Chunk = data[1]
+        self.draw_bg = not self.a.platform == 'Android'
+        self.bg = self.r.texture_from_surface(data[2])
+        self.images = tuple(self.r.texture_from_surface(data[x + 3]) for x in range(5))
         self.size = self.r.get_output_size()
         if is_pymunk:
             self.space = cp.Space(threaded=True)
@@ -59,7 +63,10 @@ class Scene(scene.Scene):
 
     def update(self, dt: float) -> None:
         self.space.step(dt)
-        self.r.clear()
+        if self.draw_bg:
+            self.r.blit(self.bg)
+        else:
+            self.r.clear()
         for circle in self.circles.copy():
             if circle.body.position[1] > self.size[1] + circle.radius:
                 self.circles.remove(circle)
@@ -80,9 +87,27 @@ class Scene(scene.Scene):
         self.r.flip()
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
+        if event.pos[0] <= 200 and event.pos[1] <= 100:
+            self.draw_bg = not self.draw_bg
+            return
         circle = Circle(event.pos, random.choice(self.images))
         self.circles.append(circle)
         self.space.add(circle.body, circle.shape)
+        self.sound.play()
+
+    def on_resize(self, event: gg.WindowEvent) -> None:
+        self.size = self.r.get_output_size()
+        self.space.remove(self.floor)
+        self.floor_rect = (20, self.size[1] - 30, self.size[0] - 40, 20)
+        self.floor = cp.Segment(
+            self.space.static_body,
+            (self.floor_rect[0], self.floor_rect[1] + self.floor_rect[3] / 2),
+            (self.floor_rect[0] + self.floor_rect[2], self.floor_rect[1] + self.floor_rect[3] / 2),
+            self.floor_rect[3] / 2
+        )
+        self.floor.elasticity = 1
+        self.floor.friction = 0.5
+        self.space.add(self.floor)
 
     def on_key_down(self, event: gg.KeyboardEvent) -> None:
         if event.sym in ('AC Back', 'Escape'):
@@ -92,6 +117,8 @@ class Scene(scene.Scene):
     def get_resources() -> tuple:
         return (
             ('font', 'segoeuib.ttf', 50),
+            ('sound', 'click.ogg'),
+            ('image', 'img0.jpg'),
             ('image', 'pixelsuftgames.jpg'),
             ('image', 'boshy.jpg'),
             ('image', 'face.png'),
@@ -103,6 +130,7 @@ class Scene(scene.Scene):
         if super().destroy():
             return True
         self.space.remove(self.floor)
+        self.sound.destroy()
         self.fps_font.destroy()
         del self.space
         del self.r
