@@ -1,4 +1,6 @@
 goodgame
+numpy
+pyopengl
 opencv-python
 wintheme
 Pillow

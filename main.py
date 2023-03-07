@@ -3,6 +3,7 @@ import sys
 import math
 import random
 import datetime
+import subprocess
 import importlib
 import wintheme
 import goodgame as gg
@@ -138,6 +139,7 @@ class Scene(scene.Scene):
         self.text = ['physics', 'snake', 'colorize', 'stars', 'font', 'chimp']
         if not self.a.platform == 'Android':
             self.text.append('video')
+            self.text.append('glcube')
         self.text.sort()
         self.textures = tuple(
             self.r.texture_from_surface(self.font.render_text(x, (255, 0, 0), blend=True)) for x in self.text
@@ -188,6 +190,9 @@ class Scene(scene.Scene):
 
     def run_test(self) -> None:
         test_name = self.text[self.current]
+        if test_name == 'glcube':
+            subprocess.call((sys.executable, self.a.p('glcube.py')))
+            return
         self.r.load_scene(importlib.import_module(test_name).Scene)
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
