@@ -135,7 +135,7 @@ class Scene(scene.Scene):
         self.bg_y_anim.calc = lambda x: math.cos(x * 3) * 50 - 70
         self.bg_r_anim = gg.Animation(math.pi * 2, True, True)
         self.bg_r_anim.calc = lambda x: math.sin(x) * 3
-        self.text = ['physics', 'snake', 'colorize']
+        self.text = ['physics', 'snake', 'colorize', 'stars']
         if not self.a.platform == 'Android':
             self.text.append('video')
         self.text.sort()
