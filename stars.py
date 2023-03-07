@@ -32,23 +32,30 @@ class Scene(scene.Scene):
         self.fps_font: gg.TTF = data[0]
         self.num_stars = 150
         self.center = (self.size[0] / 2, self.size[1] / 2)
+        self.timer = gg.Timer(1 / 60, repeat=True, enabled=True, smooth=True)
         self.stars = [Star(self.center) for _ in range(150)]
         self.auto_center = True
         self.destroyed = False
         self.a.clock.reset()
 
     def update(self, dt: float) -> None:
+        self.timer.tick(dt)
         self.r.clear()
-        for star in self.stars.copy():
-            star.pos[0] += star.vel[0]
-            star.pos[1] += star.vel[1]
-            if self.size[0] > star.pos[0] >= 0 and self.size[1] > star.pos[1] >= 0:
-                star.vel[0] *= 1.05
-                star.vel[1] *= 1.05
+        if self.timer.triggered:
+            self.timer.triggered -= 1
+            for star in self.stars.copy():
+                star.pos[0] += star.vel[0]
+                star.pos[1] += star.vel[1]
+                if self.size[0] > star.pos[0] >= 0 and self.size[1] > star.pos[1] >= 0:
+                    star.vel[0] *= 1.05
+                    star.vel[1] *= 1.05
+                    self.r.draw_point((255, 255, 255), star.pos)
+                else:
+                    self.stars.remove(star)
+                    self.stars.append(Star(self.center))
+        else:
+            for star in self.stars:
                 self.r.draw_point((255, 255, 255), star.pos)
-            else:
-                self.stars.remove(star)
-                self.stars.append(Star(self.center))
         self.r.blit(self.r.texture_from_surface(
             self.fps_font.render_text(f'FPS: {self.a.clock.get_fps()}', (0, 255, 255), blend=True)
         ), dst_rect=(0, self.fps_font.descent))
