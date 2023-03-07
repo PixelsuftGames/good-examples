@@ -34,6 +34,9 @@ class Scene(scene.Scene):
         self.chimp_size = (61 * 2, 89 * 2)
         self.chimp_left = False
         self.chimp_speed = 1000
+        self.rot_anim = gg.Animation(0.25)
+        self.rot_anim.calc = lambda x: x * 1440
+        self.rot_anim.value = 0
         self.a.set_rel_mouse(True)
         self.destroyed = False
         self.a.clock.reset()
@@ -41,18 +44,20 @@ class Scene(scene.Scene):
     def update(self, dt: float) -> None:
         mouse_pos = self.w.get_mouse_pos()
         self.y_anim.tick(dt)
-        if self.chimp_left:
-            self.chimp_pos[0] -= dt * self.chimp_speed
-            if self.chimp_pos[0] <= 0:
-                self.chimp_left = False
-        else:
-            self.chimp_pos[0] += dt * self.chimp_speed
-            if self.chimp_pos[0] + self.chimp_size[0] > self.size[0]:
-                self.chimp_left = True
+        self.rot_anim.tick(dt)
+        if not self.rot_anim.enabled:
+            if self.chimp_left:
+                self.chimp_pos[0] -= dt * self.chimp_speed
+                if self.chimp_pos[0] <= 0:
+                    self.chimp_left = False
+            else:
+                self.chimp_pos[0] += dt * self.chimp_speed
+                if self.chimp_pos[0] + self.chimp_size[0] > self.size[0]:
+                    self.chimp_left = True
         self.r.clear((170, 238, 187))
         self.r.blit_ex(self.chimp_tex, dst_rect=(
             self.chimp_pos[0], self.chimp_pos[1] + self.y_anim.value, self.chimp_size[0], self.chimp_size[1]
-        ), flip_horizontal=self.chimp_left)
+        ), angle=self.rot_anim.value, flip_horizontal=self.chimp_left)
         self.r.blit(self.text_tex, dst_rect=(self.size[0] / 2 - self.text_tex.get_w() / 2, 30))
         self.r.blit(self.fist_tex, dst_rect=(mouse_pos[0] - self.fist_offset[0], mouse_pos[1] - self.fist_offset[1]))
         self.r.blit(self.r.texture_from_surface(
@@ -61,10 +66,11 @@ class Scene(scene.Scene):
         self.r.flip()
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
-        if self.whiff_sound.is_playing() or self.punch_sound.is_playing():
+        if self.rot_anim.enabled or self.whiff_sound.is_playing() or self.punch_sound.is_playing():
             return
         if self.chimp_pos[0] + self.chimp_size[0] > event.pos[0] >= self.chimp_pos[0] and self.chimp_pos[1] +\
                 self.y_anim.value + self.chimp_size[1] > event.pos[1] >= self.chimp_pos[1] + self.y_anim.value:
+            self.rot_anim.run()
             self.punch_sound.play()
         else:
             self.whiff_sound.play()
