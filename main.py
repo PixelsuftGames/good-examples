@@ -191,7 +191,7 @@ class Scene(scene.Scene):
     def run_test(self) -> None:
         test_name = self.text[self.current]
         if test_name == 'glcube':
-            subprocess.call((sys.executable, self.a.p('glcube.py')))
+            subprocess.Popen((sys.executable, self.a.p('glcube.py')))
             return
         self.r.load_scene(importlib.import_module(test_name).Scene)
 
