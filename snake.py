@@ -43,7 +43,7 @@ class Scene(scene.Scene):
     def update_score(self) -> None:
         self.snake_len += 1
         self.score += 1
-        while self.apple_pos == self.snake[0]:
+        while self.apple_pos in self.snake:
             self.apple_pos = (random.randint(0, self.field_size[0] - 1), random.randint(0, self.field_size[1] - 1))
         self.timer.duration = max(self.timer.duration - 0.01, self.min_tick)
         self.score_tex = self.r.texture_from_surface(self.font.render_text(
