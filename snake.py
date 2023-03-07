@@ -62,6 +62,7 @@ class Scene(scene.Scene):
         if self.die_timer.enabled:
             self.die_timer.tick(dt)
             if self.die_timer.triggered:
+                self.a.clock.speed_hack = 1
                 return self.r.load_scene(main.Scene)
         elif self.timer.triggered:
             self.timer.triggered -= 1
@@ -99,6 +100,9 @@ class Scene(scene.Scene):
         self.r.flip()
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
+        if event.pos[0] <= 200 and event.pos[1] <= 100:
+            self.a.clock.speed_hack = 4
+            return
         if event.pos[0] > self.size[0] / 2:
             if event.pos[1] > self.size[1] / 2:
                 if self.dir in (0, 2):
@@ -110,6 +114,9 @@ class Scene(scene.Scene):
                 self.new_dir = 0
         elif self.dir in (1, 3):
             self.new_dir = 2
+
+    def on_mouse_up(self, event: gg.MouseButtonEvent) -> None:
+        self.a.clock.speed_hack = 1
 
     def on_key_down(self, event: gg.KeyboardEvent) -> None:
         if event.sym in ('AC Back', 'Escape'):
