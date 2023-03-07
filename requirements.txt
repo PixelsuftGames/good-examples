@@ -3,4 +3,5 @@ numpy
 pyopengl
 opencv-python
 wintheme
+pymunk
 Pillow
