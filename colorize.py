@@ -63,13 +63,13 @@ class Scene(scene.Scene):
         surf: gg.Surface = self.images[self.current_id]
         tex: gg.Texture = self.r.texture_from_surface(surf)
         result = self.r.create_texture((
-            int(self.size[0] / surf.w + 1) * surf.w,
+            int(self.size[0] / surf.w + 2) * surf.w,
             self.size[1]
         ), self.r.pixel_format_from_str('rgb888'))
         y_offset = (int(self.size[1] / surf.h + 1) * surf.h - result.get_h()) / 2
         self.r.set_target(result)
         for y in range(result.get_h() // surf.h + 1):
-            for x in range(result.get_w() // surf.w + 1):
+            for x in range(result.get_w() // surf.w):
                 self.r.blit(tex, dst_rect=(x * surf.w, y * surf.h - y_offset))
         self.r.set_target(None)
         self.tex_w = surf.w
