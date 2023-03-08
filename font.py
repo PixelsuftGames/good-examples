@@ -3,7 +3,7 @@ import scene
 import main
 
 
-# Mostly thanks pygame
+# Mostly thanks to pygame
 # https://github.com/pygame/pygame/blob/main/examples/freetype_misc.py
 
 

@@ -5,7 +5,7 @@ import scene
 import main
 
 
-# Thanks pygame
+# Thanks to pygame
 # https://github.com/pygame/pygame/blob/main/examples/stars.py
 
 

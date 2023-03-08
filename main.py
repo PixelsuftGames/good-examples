@@ -190,7 +190,7 @@ class Scene(scene.Scene):
         self.t_anim.run()
 
     def run_test(self) -> None:
-        test_name = self.text[self.current]
+        test_name = self.text[self.current].replace('!', '')
         if test_name in ('glcube', ):
             subprocess.Popen((sys.executable, self.a.p(f'{test_name}.py')))
             return

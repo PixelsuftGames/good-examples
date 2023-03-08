@@ -16,7 +16,7 @@ except ImportError:
     raise SystemExit
 
 
-# Crude port of pygame's glcube. Thanks pygame.
+# Crude port of pygame's glcube. Thanks to pygame.
 # https://github.com/pygame/pygame/blob/main/examples/glcube.py
 
 

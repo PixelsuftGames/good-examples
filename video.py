@@ -4,7 +4,7 @@ import main
 import cv2
 
 
-# Thanks, Rick
+# Thanks to Rick Astley
 # https://youtu.be/dQw4w9WgXcQ
 
 
