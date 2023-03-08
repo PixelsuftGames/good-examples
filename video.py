@@ -20,7 +20,6 @@ class Scene(scene.Scene):
         self.size = self.r.get_output_size()
         self.fps_font: gg.TTF = data[0]
         self.music: gg.Music = data[1]
-        self.circles = []
         # Not Recommended, but we don't need to check cv2
         self.cap = cv2.VideoCapture(self.a.p(self.a.assets_folder, 'video.mp4'))  # noqa
         self.format = self.r.pixel_format_from_str('bgr24')
