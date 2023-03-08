@@ -65,6 +65,11 @@ class Scene(scene.Scene):
         if event.sym in ('AC Back', 'Escape'):
             self.r.load_scene(main.Scene)
 
+    def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
+        self.frames = int(event.pos[0] / self.size[0] * self.total_frames)
+        self.cap.set(cv2.CAP_PROP_POS_FRAMES, self.frames)  # noqa
+        self.music.set_pos(self.frames / self.fps)
+
     def on_resize(self, event: gg.WindowEvent) -> None:
         self.size = self.r.get_output_size()
 
