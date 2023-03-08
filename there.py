@@ -58,7 +58,7 @@ class Scene(scene.Scene):
         self.r.flip()
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
-        if event.pos[0] <= 200 and event.pos[1] <= 100:
+        if self.math.point_in_rect((0, 0, 200, 100), event.pos):
             return self.respawn()
         self.target = event.pos
 

@@ -6,8 +6,9 @@ import datetime
 import subprocess
 import importlib
 import wintheme
-import goodgame as gg
-import scene
+os.environ['GG_ENABLE_NUMBA'] = '1'
+import goodgame as gg  # noqa
+import scene  # noqa
 
 
 class App(gg.App):
@@ -196,7 +197,7 @@ class Scene(scene.Scene):
         self.r.load_scene(importlib.import_module(test_name).Scene)
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
-        if event.pos[0] <= 200 and event.pos[1] <= 100:
+        if self.math.point_in_rect((0, 0, 200, 100), event.pos):
             self.r.set_vsync(not self.r.vsync)
             return
         if event.pos[0] > self.size[0] / 2:

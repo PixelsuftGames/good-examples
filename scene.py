@@ -4,6 +4,7 @@ import goodgame as gg
 class Scene:
     def __init__(self, renderer: gg.Renderer, data: any) -> None:
         self.destroyed = False
+        self.math = gg.Math()
 
     @staticmethod
     def get_resources() -> tuple:

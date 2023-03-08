@@ -69,8 +69,9 @@ class Scene(scene.Scene):
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
         if self.rot_anim.enabled or self.whiff_sound.is_playing() or self.punch_sound.is_playing():
             return
-        if self.chimp_pos[0] + self.chimp_size[0] > event.pos[0] >= self.chimp_pos[0] and self.chimp_pos[1] +\
-                self.y_anim.value + self.chimp_size[1] > event.pos[1] >= self.chimp_pos[1] + self.y_anim.value:
+        if self.math.point_in_rect(
+                (self.chimp_pos[0], self.chimp_pos[1], self.chimp_size[0], self.chimp_size[1]), event.pos
+        ):
             self.rot_anim.run()
             self.punch_sound.play()
         else:
