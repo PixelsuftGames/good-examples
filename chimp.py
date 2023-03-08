@@ -36,16 +36,17 @@ class Scene(scene.Scene):
         self.chimp_left = False
         self.chimp_speed = 1000
         self.fist_pos = (0, 0)
-        self.use_touch = self.a.platform == 'Android'
+        self.skip_touch = not self.a.platform == 'Android'
         self.rot_anim = gg.Animation(0.25)
         self.rot_anim.calc = lambda x: x * 1440
         self.rot_anim.value = 0
-        self.a.set_rel_mouse(True)
+        if self.skip_touch:
+            self.a.set_rel_mouse(True)
         self.destroyed = False
         self.a.clock.reset()
 
     def update(self, dt: float) -> None:
-        if not self.use_touch:
+        if self.skip_touch:
             self.fist_pos = self.w.get_mouse_pos()
         self.y_anim.tick(dt)
         self.rot_anim.tick(dt)
@@ -72,12 +73,11 @@ class Scene(scene.Scene):
         self.r.flip()
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
-        if self.use_touch:
-            self.fist_pos = event.pos
+        self.fist_pos = event.pos
         if self.rot_anim.enabled or self.whiff_sound.is_playing() or self.punch_sound.is_playing():
             return
         if self.math.point_in_rect(
-                (self.chimp_pos[0], self.chimp_pos[1], self.chimp_size[0], self.chimp_size[1]), event.pos
+                (self.chimp_pos[0], self.chimp_pos[1], self.chimp_size[0], self.chimp_size[1]), self.fist_pos
         ):
             self.rot_anim.run()
             self.punch_sound.play()
