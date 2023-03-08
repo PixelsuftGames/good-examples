@@ -16,7 +16,8 @@ except ImportError:
     raise SystemExit
 
 
-# Crude port of pygame's glcube
+# Crude port of pygame's glcube. Thanks pygame.
+# https://github.com/pygame/pygame/blob/main/examples/glcube.py
 
 
 # do we want to use the 'modern' OpenGL API or the old one?

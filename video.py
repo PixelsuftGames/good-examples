@@ -4,6 +4,10 @@ import main
 import cv2
 
 
+# Thanks, Rick
+# https://youtu.be/dQw4w9WgXcQ
+
+
 class Scene(scene.Scene):
     def __init__(self, renderer: main.Renderer, data: any) -> None:
         super().__init__(renderer, data)
@@ -26,7 +30,7 @@ class Scene(scene.Scene):
         self.limit = 1 / self.fps
         self.video_size = (self.cap.get(cv2.CAP_PROP_FRAME_WIDTH), self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))  # noqa
         self.pitch = int(3 * self.video_size[0])
-        self.tex = self.r.create_texture(self.video_size, self.format)
+        self.tex = self.r.create_texture(self.video_size, self.format, 'streaming')
         self.update_frame()
         self.timer = gg.Timer(self.limit, enabled=True, smooth=True)
         self.destroyed = False

@@ -5,6 +5,7 @@ import main
 
 
 # Thanks pygame
+# https://github.com/pygame/pygame/blob/main/examples/go_over_there.py
 
 
 class Ball:

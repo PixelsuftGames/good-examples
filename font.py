@@ -4,6 +4,7 @@ import main
 
 
 # Mostly thanks pygame
+# https://github.com/pygame/pygame/blob/main/examples/freetype_misc.py
 
 
 class Scene(scene.Scene):
