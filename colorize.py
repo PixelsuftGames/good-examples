@@ -62,6 +62,7 @@ class Scene(scene.Scene):
     def create_texture(self) -> gg.Texture:
         surf: gg.Surface = self.images[self.current_id]
         tex: gg.Texture = self.r.texture_from_surface(surf)
+        tex.set_scale_mode('linear')
         scale = self.size[1] / surf.h
         w_scale = surf.w * scale
         result = self.r.create_texture((
