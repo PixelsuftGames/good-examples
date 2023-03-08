@@ -46,8 +46,6 @@ class Scene(scene.Scene):
         self.a.clock.reset()
 
     def update(self, dt: float) -> None:
-        if self.skip_touch:
-            self.fist_pos = self.w.get_mouse_pos()
         self.y_anim.tick(dt)
         self.rot_anim.tick(dt)
         if not self.rot_anim.enabled:
@@ -83,6 +81,10 @@ class Scene(scene.Scene):
             self.punch_sound.play()
         else:
             self.whiff_sound.play()
+
+    def on_mouse_move(self, event: gg.MouseMotionEvent) -> None:
+        if self.skip_touch or event.state[0]:
+            self.fist_pos = event.pos
 
     def on_key_down(self, event: gg.KeyboardEvent) -> None:
         if event.sym in ('AC Back', 'Escape'):
