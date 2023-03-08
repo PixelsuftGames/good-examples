@@ -35,6 +35,8 @@ class Scene(scene.Scene):
         self.chimp_size = (61 * 2, 89 * 2)
         self.chimp_left = False
         self.chimp_speed = 1000
+        self.fist_pos = (0, 0)
+        self.use_touch = self.a.platform == 'Android'
         self.rot_anim = gg.Animation(0.25)
         self.rot_anim.calc = lambda x: x * 1440
         self.rot_anim.value = 0
@@ -43,7 +45,8 @@ class Scene(scene.Scene):
         self.a.clock.reset()
 
     def update(self, dt: float) -> None:
-        mouse_pos = self.w.get_mouse_pos()
+        if not self.use_touch:
+            self.fist_pos = self.w.get_mouse_pos()
         self.y_anim.tick(dt)
         self.rot_anim.tick(dt)
         if not self.rot_anim.enabled:
@@ -60,13 +63,17 @@ class Scene(scene.Scene):
             self.chimp_pos[0], self.chimp_pos[1] + self.y_anim.value, self.chimp_size[0], self.chimp_size[1]
         ), angle=self.rot_anim.value, flip_horizontal=self.chimp_left)
         self.r.blit(self.text_tex, dst_rect=(self.size[0] / 2 - self.text_tex.get_w() / 2, 30))
-        self.r.blit(self.fist_tex, dst_rect=(mouse_pos[0] - self.fist_offset[0], mouse_pos[1] - self.fist_offset[1]))
+        self.r.blit(
+            self.fist_tex, dst_rect=(self.fist_pos[0] - self.fist_offset[0], self.fist_pos[1] - self.fist_offset[1])
+        )
         self.r.blit(self.r.texture_from_surface(
             self.fps_font.render_text(f'FPS: {self.a.clock.get_fps()}', (0, 255, 255), blend=True)
         ), dst_rect=(0, self.fps_font.descent))
         self.r.flip()
 
     def on_mouse_down(self, event: gg.MouseButtonEvent) -> None:
+        if self.use_touch:
+            self.fist_pos = event.pos
         if self.rot_anim.enabled or self.whiff_sound.is_playing() or self.punch_sound.is_playing():
             return
         if self.math.point_in_rect(
