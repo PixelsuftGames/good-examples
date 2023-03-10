@@ -20,7 +20,10 @@ class Scene(scene.Scene):
         self.size = self.r.get_output_size()
         self.fps_font: gg.TTF = data[0]
         self.font: gg.TTF = data[1]
-        self.font.set_wrapped_align('center')
+        try:
+            self.font.set_wrapped_align('center')
+        except RuntimeError:
+            pass
         self.text_tex = self.r.texture_from_surface(self.font.render_text_wrapped(
             'Pummel The Chimp, And Win $$$', (0, 0, 0), blend=True, wrap_length=self.size[0]
         ))
