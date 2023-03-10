@@ -2,3 +2,7 @@
 __pycache__
 bin
 goodgame
+.buildozer
+tests
+sdl2
+
