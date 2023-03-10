@@ -13,8 +13,12 @@ class Scene(scene.Scene):
         self.r: main.Renderer = renderer
         self.w.set_resizable(True)
         self.size = self.r.get_output_size()
-        self.fps_font: gg.TTF = data[0]
-        self.images = tuple(data[1:])
+        bm_tex = self.r.texture_from_surface(data[1])
+        bm_tex.set_scale_mode('linear')
+        self.fps_font = gg.BMFont(self.r, data[0], {
+            'goldFont-hd.png': bm_tex
+        })
+        self.images = tuple(data[2:])
         self.current_id = 0
         self.tex_w = 0
         self.texture = self.create_texture()
@@ -54,9 +58,10 @@ class Scene(scene.Scene):
             self.color.run()
         self.texture.set_color_mod(self.color.value)
         self.r.blit(self.texture, dst_rect=(self.bg_anim.value, 0))
-        self.r.blit(self.r.texture_from_surface(
-            self.fps_font.render_text(f'FPS: {self.a.clock.get_fps()}', (0, 255, 255), blend=True)
-        ), dst_rect=(0, self.fps_font.descent))
+        self.r.blit(
+            self.fps_font.render(f'FPS: {self.a.clock.get_fps()}'),
+            dst_rect=(0, -self.fps_font.common['base'] // 2)
+        )
         self.r.flip()
 
     def create_texture(self) -> gg.Texture:
@@ -98,7 +103,8 @@ class Scene(scene.Scene):
     @staticmethod
     def get_resources() -> tuple:
         return (
-            ('font', 'segoeuib.ttf', 50),
+            ('text', 'goldFont-hd.fnt'),
+            ('image', 'goldFont-hd.png')
         ) + tuple(('image', f'game_bg_0{x}_001-hd.png') for x in range(1, 10)) +\
             tuple(('image', f'game_bg_{x}_001-hd.png') for x in range(10, 20))
 

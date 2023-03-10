@@ -101,6 +101,8 @@ class Renderer(gg.Renderer):
             return gg.Chunk(self.mixer, fp)
         elif to_load[0] == 'font':
             return gg.TTF(self.app, fp, to_load[2])
+        elif to_load[0] == 'text':
+            return open(fp, 'r', encoding=self.app.encoding).read()
 
     def destroy(self) -> bool:
         if self.destroyed:
